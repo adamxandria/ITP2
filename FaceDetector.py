@@ -19,19 +19,15 @@ warnings.filterwarnings('ignore') # ignore all warnings
 torch.manual_seed(1) # Seed for generating random numbers
 
 # Define paths (adjust these to your local directory structure)
-video_path = '/home/deepfake/Documents/Adam/itp2_videoinput/Elon Musks Deep Fake Video Promoting a Crypto Scam.mp4'
-output_folder = '/home/deepfake/Documents/Adam/Output/2'
+video_path = '/home/deepfake/Documents/Adam/dataset/multiple-entity/Elon Musks Deep Fake Video Promoting a Crypto Scam.mp4'
+output_folder = '/home/deepfake/Documents/Adam/Output/3'
 
-# Create output folder if it doesn't exist
-if not os.path.exists(output_folder):
-    os.makedirs(output_folder)
+# Create output folder if it doesn't ex                            # pil_image = transforms.ToPILImage()(face)
 
-DEFAULT_FACE_MIN_CONF = 0.95
-
-class VideoTask:
-    def __init__(self):
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        self.mtcnn = MTCNN(select_largest=False, post_process=False, device=self.device)
+                            # # Save the frame as an image
+                            # frame_filename = f'{output_folder}/frame_{frame_number:04d}_face_{i}_{face_id}.jpg'
+                            # pil_image.save(frame_filename)
+                            # print(f'Saved {frame_filename} - assigned ID: {face_id}')est=False, post_process=False, device=self.device)
         self.known_faces = []
         self.tracked_faces = []
         self.next_face_id = 0
@@ -84,7 +80,12 @@ class VideoTask:
         # Get the best match (smallest distance)
         best_match_index = np.argmin(face_distances)
         if matches[best_match_index]:
-            recognized_name = self.known_faces[best_match_index]['name']
+            recognized_name = self.known_fac                            # pil_image = transforms.ToPILImage()(face)
+
+                            # # Save the frame as an image
+                            # frame_filename = f'{output_folder}/frame_{frame_number:04d}_face_{i}_{face_id}.jpg'
+                            # pil_image.save(frame_filename)
+                            # print(f'Saved {frame_filename} - assigned ID: {face_id}')es[best_match_index]['name']
         else:
             recognized_name = 'Unknown'
 
@@ -94,7 +95,12 @@ class VideoTask:
     def get_boundingbox(self, var_x1, var_y1, var_x2, var_y2):
         var_y2 += (var_y2 - var_y1) / 10
         var_w = var_x2 - var_x1
-        var_h = var_y2 - var_y1
+        var_h = var_y2 - var_y1                            # pil_image = transforms.ToPILImage()(face)
+
+                            # # Save the frame as an image
+                            # frame_filename = f'{output_folder}/frame_{frame_number:04d}_face_{i}_{face_id}.jpg'
+                            # pil_image.save(frame_filename)
+                            # print(f'Saved {frame_filename} - assigned ID: {face_id}')
         diff_h_w = (var_h - var_w) / 2
         var_x1 -= diff_h_w
         var_x2 += diff_h_w
@@ -150,7 +156,6 @@ class VideoTask:
         return tensor_faces, face_boxes
 
 
-    
     def video_process(self, infile, face_min_conf, max_fr):
         length = 0
         face_data_list = []  # List to store all face data
@@ -200,12 +205,12 @@ class VideoTask:
                             })
 
                             # Convert tensor to PIL image (removing unusual color maps)
-                            pil_image = transforms.ToPILImage()(face)
+                            # pil_image = transforms.ToPILImage()(face)
 
-                            # Save the frame as an image
-                            frame_filename = f'{output_folder}/frame_{frame_number:04d}_face_{i}_{face_id}.jpg'
-                            pil_image.save(frame_filename)
-                            print(f'Saved {frame_filename} - assigned ID: {face_id}')
+                            # # Save the frame as an image
+                            # frame_filename = f'{output_folder}/frame_{frame_number:04d}_face_{i}_{face_id}.jpg'
+                            # pil_image.save(frame_filename)
+                            # print(f'Saved {frame_filename} - assigned ID: {face_id}')
                         frame_number += 1
                 except Exception as e:
                     print(f"Error processing frame {counter_frame}: {e}")
@@ -221,4 +226,9 @@ face_data_list = video_task.video_process(video_path, DEFAULT_FACE_MIN_CONF, fra
 
 # Output for verification
 for face_data in face_data_list:
-    print(f"Frame: {face_data['frame_number']}, Bounding Box: {face_data['bounding_box']}")
+    face_id = face_data['face_id']
+    face_tensor = face_data['face_tensor']  # This is the tensor representation of the face
+    bounding_box = face_data['bounding_box']
+    frame_number = face_data['frame_number']
+    
+    print(f"Frame: {frame_number}, Face ID: {face_id}, Bounding Box: {bounding_box}, Face Tensor: {face_tensor}")
